@@ -1,0 +1,45 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Deserialized.System.Collections.Hashtable</T>
+      <T>Deserialized.System.Object</T>
+    </TN>
+    <DCT>
+      <En>
+        <S N="Key">UserAgent</S>
+        <S N="Value">Mozilla/5.0 WindowsPowerShell/3.0</S>
+      </En>
+      <En>
+        <S N="Key">UriBase</S>
+        <S N="Value">/ServicesPortal/api/</S>
+      </En>
+      <En>
+        <S N="Key">UriBaseGlobal</S>
+        <S N="Value">/admin/</S>
+      </En>
+      <En>
+        <S N="Key">DataStores</S>
+        <Obj N="Value" RefId="1">
+          <TN RefId="1">
+            <T>Deserialized.System.Object[]</T>
+            <T>Deserialized.System.Array</T>
+            <T>Deserialized.System.Object</T>
+          </TN>
+          <LST>
+            <URI>https://storebox1.ds.example.com/</URI>
+            <URI>https://storebox2.ds.example.com/</URI>
+            <URI>https://storebox3.ds.example.com/</URI>
+          </LST>
+        </Obj>
+      </En>
+      <En>
+        <S N="Key">UriBaseLocal</S>
+        <S N="Value">/ServicesPortal/</S>
+      </En>
+      <En>
+        <S N="Key">DefaultPlan</S>
+        <S N="Value">Default</S>
+      </En>
+    </DCT>
+  </Obj>
+</Objs>

@@ -4805,6 +4805,11 @@ $xmlResponse.QueryList.Link;
 $xmlResponse = Invoke-CteraFileTransfer -Api "query" -QueryParameters "type=cell";
 $xmlResponse.QueryResultRecords.CellRecord;
 
+.EXAMPLE
+
+Upload file to Project folder
+
+Invoke-CteraFileTransfer -Upload MyProjectFolder -Path C:\myFile.txt -AutomaticFileName
 
 .LINK
 
@@ -5663,6 +5668,7 @@ Export-ModuleMember -Function Set-CteraEmailTemplate;
  # Version history
  # ########################################
  #
+ # 2014-10-10; ckreissl; ADD: Invoke-CteraFileTransfer, add help example 
  # 2013-12-15; rrink; CHG: Invoke-CteraRestCall, moved $wc.Dispose() to finally
  # 2013-12-15; rrink; CHG: Invoke-CteraFileTransfer, moved $wc.Dispose() to finally
  # 2013-11-27; rrink; CHG: Invoke-CteraFileTransfer, Parameter validation for PortalName

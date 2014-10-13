@@ -1,28 +1,19 @@
-﻿Set-Variable MODULE_NAME -Option 'Constant' -Value 'biz.dfch.PS.Storebox.Api';
-$fn = $MODULE_NAME;
+﻿$fn = $MyInvocation.MyCommand.Name;
 
 Set-Variable gotoSuccess -Option 'Constant' -Value 'biz.dfch.System.Exception.gotoSuccess';
 Set-Variable gotoError -Option 'Constant' -Value 'biz.dfch.System.Exception.gotoError';
 Set-Variable gotoFailure -Option 'Constant' -Value 'biz.dfch.System.Exception.gotoFailure';
 Set-Variable gotoNotFound -Option 'Constant' -Value 'biz.dfch.System.Exception.gotoNotFound';
 
-# Load module configuration file
-# As (Get-Module $MODULE_NAME).ModuleBase does not return the module path during 
-# module load we resort to searching the whole PSModulePath. Configuration file 
-# is loaded on a first match basis.
-$mvar = $MODULE_NAME.Replace('.', '_');
-foreach($var in $ENV:PSModulePath.Split(';')){ 
-	[string] $ModuleDirectoryBase = Join-Path -Path $var -ChildPath $MODULE_NAME;
-	[string] $ModuleConfigFile = '{0}.xml' -f $MODULE_NAME;
-	[string] $ModuleConfigurationPathAndFile = Join-Path -Path $ModuleDirectoryBase -ChildPath $ModuleConfigFile;
-	if($true -eq (Test-Path -Path $ModuleConfigurationPathAndFile)) {
-		if($true -ne (Test-Path variable:$($mvar))) {
-			Log-Debug $fn ("Loading module configuration file from: '{0}' ..." -f $ModuleConfigurationPathAndFile);
-			Set-Variable -Name $mvar -Value (Import-Clixml -Path $ModuleConfigurationPathAndFile) -Description "The array contains the public configuration properties of the module '$MODULE_NAME'." ;
-			break;
-		} # if()
+[string] $ModuleConfigFile = '{0}.xml' -f (Get-Item $PSCommandPath).BaseName;
+[string] $ModuleConfigurationPathAndFile = Join-Path -Path $PSScriptRoot -ChildPath $ModuleConfigFile;
+$mvar = $ModuleConfigFile.Replace('.xml', '').Replace('.', '_');
+if($true -eq (Test-Path -Path $ModuleConfigurationPathAndFile)) {
+	if($true -ne (Test-Path variable:$($mvar))) {
+		Log-Debug $fn ("Loading module configuration file from: '{0}' ..." -f $ModuleConfigurationPathAndFile);
+		Set-Variable -Name $mvar -Value (Import-Clixml -Path $ModuleConfigurationPathAndFile);
 	} # if()
-} # for()
+} # if()
 if($true -ne (Test-Path variable:$($mvar))) {
 	Write-Error "Could not find module configuration file '$ModuleConfigFile' in 'ENV:PSModulePath'.`nAborting module import...";
 	break; # Aborts loading module.

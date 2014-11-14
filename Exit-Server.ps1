@@ -61,7 +61,7 @@ Exit-Server -UriPortal 'https://promo.ds01.swisscom.com'.
 
 .LINK
 
-Online Version: http://dfch.biz/biz/dfch/PSStorebox/Api/Exit-Server
+Online Version: http://dfch.biz/biz/dfch/PS/Storebox/Api/Exit-Server
 
 Enter-Ctera
 
@@ -75,7 +75,7 @@ Requires module 'biz.dfch.PS.System.Logging'.
 
 #>
 	[CmdletBinding(
-		HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Exit-Server'
+		HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Exit-Server'
     )]
 	[OutputType([Boolean])]
   Param (

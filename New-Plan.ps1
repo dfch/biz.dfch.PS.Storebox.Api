@@ -2,7 +2,7 @@ function New-Plan {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="Medium",
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/New-Plan/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/New-Plan/'
 )]
 [OutputType([hashtable])]
 PARAM (

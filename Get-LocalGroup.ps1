@@ -2,7 +2,7 @@ function Get-LocalGroup {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="Medium",
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Get-LocalGroup/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Get-LocalGroup/'
 )]
 PARAM (
 	[Parameter(ValueFromPipeline = $true, Mandatory = $true, Position = 0, ParameterSetName = 'name')]

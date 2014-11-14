@@ -61,7 +61,7 @@ Get-Entity -UriPortal 'https://promo.ds01.swisscom.com' -Username 'PeterLustig' 
 
 .LINK
 
-Online Version: http://dfch.biz/biz/dfch/PSStorebox/Api/Get-Entity/
+Online Version: http://dfch.biz/biz/dfch/PS/Storebox/Api/Get-Entity/
 Enter-Ctera
 
 
@@ -74,7 +74,7 @@ Requires module 'biz.dfch.PS.System.Logging'.
 
 #>
 	[CmdletBinding(
-		HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Get-Entity/'
+		HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Get-Entity/'
     )]
 	[OutputType([xml], ParameterSetName = 'list')]
 	[OutputType([System.Collections.Hashtable], ParameterSetName = 'portal')]

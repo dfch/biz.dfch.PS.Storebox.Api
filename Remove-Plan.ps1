@@ -2,7 +2,7 @@ function Remove-Plan {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="High",
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Remove-Plan/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Remove-Plan/'
 )]
 [OutputType([hashtable])]
 PARAM (

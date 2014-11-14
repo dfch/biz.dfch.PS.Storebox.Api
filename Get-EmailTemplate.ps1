@@ -1,6 +1,6 @@
 function Get-EmailTemplate {
 [CmdletBinding(
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Get-EmailTemplate/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Get-EmailTemplate/'
 )]
 Param (
 	[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'name')]

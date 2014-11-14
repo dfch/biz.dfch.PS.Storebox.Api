@@ -2,7 +2,7 @@ function New-LocalUser {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="Medium",
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/New-LocalUser/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/New-LocalUser/'
 )]
 [OutputType([hashtable])]
 PARAM (

@@ -2,7 +2,7 @@ function Set-Object {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="High",
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Set-Object/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Set-Object/'
 )]
 [OutputType([Boolean])]
 Param (

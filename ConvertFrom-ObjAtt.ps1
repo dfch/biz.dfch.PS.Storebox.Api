@@ -1,6 +1,6 @@
 function ConvertFrom-ObjAtt {
 [CmdletBinding(
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Utilities/ConvertFrom-ObjAtt'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Utilities/ConvertFrom-ObjAtt'
 )]
 [OutputType([string])]
 Param (

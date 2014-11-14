@@ -1,6 +1,6 @@
 function ConvertTo-Xml {
 	[CmdletBinding(
-		HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/ConvertTo-Xml/'
+		HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/ConvertTo-Xml/'
     )]
 	[OutputType([string])]
 Param (

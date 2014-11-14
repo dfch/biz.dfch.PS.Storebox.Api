@@ -61,7 +61,7 @@ Select-Portal -UriPortal 'https://promo.ds01.swisscom.com' -Username 'PeterLusti
 
 .LINK
 
-Online Version: http://dfch.biz/biz/dfch/PSStorebox/Api/Select-Portal/
+Online Version: http://dfch.biz/biz/dfch/PS/Storebox/Api/Select-Portal/
 Enter-Ctera
 
 
@@ -74,7 +74,7 @@ Requires module 'biz.dfch.PS.System.Logging'.
 
 #>
 	[CmdletBinding(
-		HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Select-Portal/'
+		HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Select-Portal/'
     )]
 	[OutputType([Microsoft.PowerShell.Commands.WebResponseObject])]
   Param (

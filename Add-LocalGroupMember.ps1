@@ -4,7 +4,7 @@ function Add-LocalGroupMember {
 	,
     ConfirmImpact = "Medium"
 	,
-	HelpURI = 'http://dfch.biz/biz/dfch/PSStorebox/Api/Add-LocalGroupMember/'
+	HelpURI = 'http://dfch.biz/biz/dfch/PS/Storebox/Api/Add-LocalGroupMember/'
 )]
 PARAM (
 	[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'name')]

@@ -2,7 +2,7 @@ function ConvertFrom-Obj {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="Low",
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/ConvertFrom-Obj/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/ConvertFrom-Obj/'
 )]
 [OutputType([hashtable[]])]
 PARAM (

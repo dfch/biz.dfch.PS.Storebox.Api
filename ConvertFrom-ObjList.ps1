@@ -2,7 +2,7 @@ function ConvertFrom-ObjList {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="Low",
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/ConvertFrom-ObjList/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/ConvertFrom-ObjList/'
 )]
 [OutputType([hashtable[]])]
 PARAM (

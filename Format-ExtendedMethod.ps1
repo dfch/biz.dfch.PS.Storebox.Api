@@ -1,6 +1,6 @@
 function Format-ExtendedMethod {
 	[CmdletBinding(
-		HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Format-ExtendedMethod/'
+		HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Format-ExtendedMethod/'
     )]
 	[OutputType([string])]
 	Param (

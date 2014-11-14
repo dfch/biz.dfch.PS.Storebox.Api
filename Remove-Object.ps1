@@ -2,7 +2,7 @@ function Remove-Object {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="High",
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Remove-Object/'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Remove-Object/'
 )]
 [OutputType([Boolean])]
 Param (

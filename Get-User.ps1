@@ -61,7 +61,7 @@ Get-User -UriPortal 'https://promo.ds01.swisscom.com' -Username 'PeterLustig' -C
 
 .LINK
 
-Online Version: http://dfch.biz/biz/dfch/PSStorebox/Api/Get-User/
+Online Version: http://dfch.biz/biz/dfch/PS/Storebox/Api/Get-User/
 Enter-Ctera
 
 
@@ -74,7 +74,7 @@ Requires module 'biz.dfch.PS.System.Logging'.
 
 #>
 	[CmdletBinding(
-		HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Get-User/'
+		HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Get-User/'
     )]
 	[OutputType([xml], ParameterSetName = 'list')]
 	[OutputType([System.Collections.Hashtable], ParameterSetName = 'user')]

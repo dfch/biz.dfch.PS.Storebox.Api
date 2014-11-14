@@ -61,7 +61,7 @@ Get-Portal -UriPortal 'https://promo.ds01.swisscom.com' -Username 'PeterLustig' 
 
 .LINK
 
-Online Version: http://dfch.biz/biz/dfch/PSStorebox/Api/Get-Portal/
+Online Version: http://dfch.biz/biz/dfch/PS/Storebox/Api/Get-Portal/
 Enter-Ctera
 
 
@@ -74,7 +74,7 @@ Requires module 'biz.dfch.PS.System.Logging'.
 
 #>
 	[CmdletBinding(
-		HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Get-Portal/'
+		HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Get-Portal/'
     )]
 	[OutputType([xml], ParameterSetName = 'list')]
 	[OutputType([System.Collections.Hashtable], ParameterSetName = 'portal')]

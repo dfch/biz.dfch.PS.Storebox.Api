@@ -1,6 +1,6 @@
 function New-AclEntry {
 [CmdletBinding(
-	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Utilities/New-AclEntry'
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Utilities/New-AclEntry'
 )]
 [OutputType([hashtable])]
 Param (

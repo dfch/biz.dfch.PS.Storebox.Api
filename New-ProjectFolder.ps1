@@ -35,7 +35,7 @@ function New-ProjectFolder {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="Medium",
-	HelpURI='http://dfch.biz/PS/Storebox/Api/New-ProjectFolder/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/New-ProjectFolder/'
 )]
 [OutputType([string])]
 Param (

@@ -1,6 +1,6 @@
 function New-ProjectAclRule {
 [CmdletBinding(
-	HelpURI='http://dfch.biz/PS/Storebox/Utilities/New-ProjectAclRule'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Utilities/New-ProjectAclRule'
 )]
 [OutputType([string])]
 Param (

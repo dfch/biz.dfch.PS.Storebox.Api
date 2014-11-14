@@ -2,7 +2,7 @@ function New-LocalGroup {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="Medium",
-	HelpURI='http://dfch.biz/PS/Storebox/Api/New-LocalGroup/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/New-LocalGroup/'
 )]
 [OutputType([string])]
 PARAM (

@@ -2,7 +2,7 @@ function New-Portal {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="High",
-	HelpURI='http://dfch.biz/PS/Storebox/Api/New-Portal/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/New-Portal/'
 )]
 [OutputType([String])]
 Param (

@@ -77,7 +77,7 @@ $xmlResponse.QueryResultRecords.CellRecord;
 
 .LINK
 
-Online Version: http://dfch.biz/PS/Storebox/Api/Invoke-RestCall
+Online Version: http://dfch.biz/biz/dfch/PSStorebox/Api/Invoke-RestCall
 
 
 
@@ -90,7 +90,7 @@ Requires a session to a CTERA host.
 
 #>
 	[CmdletBinding(
-		HelpURI='http://dfch.biz/PS/Storebox/Api/Invoke-RestCall'
+		HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Invoke-RestCall'
     )]
 	[OutputType([string])]
   Param (

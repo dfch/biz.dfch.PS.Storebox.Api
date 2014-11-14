@@ -1,6 +1,6 @@
 function New-ListVal {
 [CmdletBinding(
-	HelpURI='http://dfch.biz/PS/Storebox/Api/New-ListVal/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/New-ListVal/'
 )]
 [OutputType([string])]
 PARAM (

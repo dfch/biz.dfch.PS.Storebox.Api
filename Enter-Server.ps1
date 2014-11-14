@@ -73,7 +73,7 @@ Enter-ServerDeprecated -Uri 'https://promo.ds01.swisscom.com' -Credentials [PSCr
 
 .LINK
 
-Online Version: http://dfch.biz/PS/Storebox/Api/Enter-ServerDeprecated/
+Online Version: http://dfch.biz/biz/dfch/PSStorebox/Api/Enter-ServerDeprecated/
 
 Exit-Ctera
 
@@ -87,7 +87,7 @@ Requires module 'biz.dfch.PS.System.Logging'.
 
 #>
 [CmdletBinding(
-	HelpURI='http://dfch.biz/PS/Storebox/Api/Enter-Server/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Enter-Server/'
 )]
 [OutputType([hashtable])]
 Param (

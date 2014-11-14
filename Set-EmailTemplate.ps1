@@ -1,6 +1,6 @@
 function Set-EmailTemplate {
 [CmdletBinding(
-	HelpURI='http://dfch.biz/PS/Storebox/Api/Set-EmailTemplate/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Set-EmailTemplate/'
 )]
 Param (
 	[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'reset')]

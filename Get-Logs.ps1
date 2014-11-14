@@ -2,7 +2,7 @@ function Get-Logs {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="Low",
-	HelpURI='http://dfch.biz/PS/Storebox/Api/Get-Logs/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Get-Logs/'
 )]
 [OutputType([Boolean])]
 Param (

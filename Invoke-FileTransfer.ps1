@@ -82,7 +82,7 @@ Invoke-FileTransfer -Upload MyProjectFolder -Path C:\myFile.txt -AutomaticFileNa
 
 .LINK
 
-Online Version: http://dfch.biz/PS/Storebox/Api/Invoke-FileTransfer
+Online Version: http://dfch.biz/biz/dfch/PSStorebox/Api/Invoke-FileTransfer
 
 
 
@@ -97,7 +97,7 @@ Requires a session to a CTERA host.
 [CmdletBinding(
 	SupportsShouldProcess=$true,
 	ConfirmImpact="High",
-	HelpURI='http://dfch.biz/PS/Storebox/Api/Invoke-FileTransfer'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Invoke-FileTransfer'
 )]
 [OutputType([string])]
 Param (

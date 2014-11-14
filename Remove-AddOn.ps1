@@ -2,7 +2,7 @@ function Remove-AddOn {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="High",
-	HelpURI='http://dfch.biz/PS/Storebox/Api/Remove-AddOn/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Remove-AddOn/'
 )]
 [OutputType([hashtable])]
 PARAM (

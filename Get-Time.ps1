@@ -1,6 +1,6 @@
 function Get-Time {
 [CmdletBinding(
-	HelpURI='http://dfch.biz/PS/Storebox/Api/Get-Time/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Get-Time/'
 )]
 [OutputType([hashtable])]
 Param (

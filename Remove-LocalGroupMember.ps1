@@ -2,7 +2,7 @@ function Remove-LocalGroupMember {
 [CmdletBinding(
     SupportsShouldProcess=$true,
     ConfirmImpact="High",
-	HelpURI='http://dfch.biz/PS/Storebox/Api/Remove-LocalGroupMember/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Remove-LocalGroupMember/'
 )]
 PARAM (
 	[Parameter(Mandatory = $true, Position = 0, ParameterSetName = 'name')]

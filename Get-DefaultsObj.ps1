@@ -1,6 +1,6 @@
 function Get-DefaultsObj {
 [CmdletBinding(
-	HelpURI='http://dfch.biz/PS/Storebox/Api/Get-DefaultsObj/'
+	HelpURI='http://dfch.biz/biz/dfch/PSStorebox/Api/Get-DefaultsObj/'
 )]
 [OutputType([string])]
 Param (

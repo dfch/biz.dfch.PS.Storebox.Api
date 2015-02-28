@@ -165,7 +165,8 @@ Requires a session to a CTERA host.
 			$wc.Headers.Add('x-ctera-token', $biz_dfch_PS_Storebox_Api.SessionCookie.Value);
 			$wc.Headers.Add('User-Agent', $WebRequestSession.UserAgent);
 
-			Log-Debug $fn ("Invoking '{0}' '{1}' ..." -f $Method, $Uri);
+			# Excessive logging
+			# Log-Debug $fn ("Invoking '{0}' '{1}' ..." -f $Method, $Uri);
 			[string] $response = '';
 			if('GET'.Equals($Method.ToUpper()) ) {
 				$response = $wc.DownloadString($Uri);
@@ -177,7 +178,8 @@ Requires a session to a CTERA host.
 				Log-Error $fn ("Invoking '{0}' '{1}' FAILED. '{2}'" -f $Method, $Uri, $error[0]);
 				throw($gotoFailure);
 			} # if
-			Log-Debug $fn ("Invoking '{0}' '{1}' SUCCEEDED." -f $Method, $Uri);
+			# Excessive logging
+			# Log-Debug $fn ("Invoking '{0}' '{1}' SUCCEEDED." -f $Method, $Uri);
 			try {
 				# try to convert the response to XML
 				# on failure we are probably not authenticated or something else went wrong
@@ -243,8 +245,8 @@ Export-ModuleMember -Function Invoke-RestCall -Alias Invoke-Command;
 # SIG # Begin signature block
 # MIIW3AYJKoZIhvcNAQcCoIIWzTCCFskCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU/4SfYtgwkPGGnk35FVeOawWZ
-# YhagghGYMIIEFDCCAvygAwIBAgILBAAAAAABL07hUtcwDQYJKoZIhvcNAQEFBQAw
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUjlZ8s3Ovj8jtFWLxLbMRXFnZ
+# 2uagghGYMIIEFDCCAvygAwIBAgILBAAAAAABL07hUtcwDQYJKoZIhvcNAQEFBQAw
 # VzELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNV
 # BAsTB1Jvb3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw0xMTA0
 # MTMxMDAwMDBaFw0yODAxMjgxMjAwMDBaMFIxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
@@ -342,25 +344,25 @@ Export-ModuleMember -Function Invoke-RestCall -Alias Invoke-Command;
 # bnYtc2ExJzAlBgNVBAMTHkdsb2JhbFNpZ24gQ29kZVNpZ25pbmcgQ0EgLSBHMgIS
 # ESFgd9/aXcgt4FtCBtsrp6UyMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEMMQow
 # CKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcC
-# AQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBRvzSAi3gXn5ZbEL+uK
-# WI7XV5is2zANBgkqhkiG9w0BAQEFAASCAQDDYByaCslRX7FAI1392lbPX3WobYVQ
-# L0X+BxwttIiSbatvk05DoyPziTjIsTqOgs1PUisgXaKnVrvElTsMlbwvCnLCU1xn
-# Nm+9+7g1/Fg50/n9b/SvkizPt9fneffRaR0c5lWE+gK5mquHW+pGdvmdUwUaDAVI
-# 4YCN5/JbLqw8Rf4L38kPvxQP5xJC7YRNVrboRHUpDzZMevdoUbfxpXnZRQv0NhJs
-# YiYGI810zJgLhlU6VEAG37zd69pTt5MWwxHAbCKX5yKI/yKtErd/wEcGQaHGmXUQ
-# 4v5cr9rkhTmGtpFmj8ruE7o5I7oP3EQbnSDsMn1VQ9OPAw8cFsdp1ojNoYICojCC
+# AQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBRbhjUWjg57cdHiERTO
+# rZcE3SCPkzANBgkqhkiG9w0BAQEFAASCAQC5nrhy30P7U9cWn29Ruakh3I24+Xsk
+# TQ7zsn1O1wtYlI9e/KJg3yL/0b7Tcbr6QOSUiby4l8sgvFeQEizznRpuJqRc4Cx7
+# cf26HeYJzG9jiFYrphZUtQ1wWA4cwFdBTPv9c4hnmq0l8lEpdW0MyYQR3X/ulXpZ
+# htwxM8+PExgrSC1RTnlklfAg6e1kjAB26UrcRY9jGLsAs38Yn+jRLNySHJLq7WgT
+# C047+TIhOBJ7MmzjtdRW9GDU+Pd3xbGfPZxvy03hICgzmtYWMgq5gsG4vtR2EUF2
+# de6I4ShjbFXqTqCvmkNl3ZrCvzLTOY65rWBgeUuCbIeEkvTTTjsMKBqBoYICojCC
 # Ap4GCSqGSIb3DQEJBjGCAo8wggKLAgEBMGgwUjELMAkGA1UEBhMCQkUxGTAXBgNV
 # BAoTEEdsb2JhbFNpZ24gbnYtc2ExKDAmBgNVBAMTH0dsb2JhbFNpZ24gVGltZXN0
 # YW1waW5nIENBIC0gRzICEhEhQFwfDtJYiCvlTYaGuhHqRTAJBgUrDgMCGgUAoIH9
-# MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE0MTEy
-# NTE2MjU0MVowIwYJKoZIhvcNAQkEMRYEFEJZMWxw4k93ue3kx14RjlOgmZeJMIGd
+# MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE1MDIy
+# ODExMjEzOFowIwYJKoZIhvcNAQkEMRYEFAzhAP0UK1EE4OYyZiCGQunCirXJMIGd
 # BgsqhkiG9w0BCRACDDGBjTCBijCBhzCBhAQUjOafUBLh0aj7OV4uMeK0K947NDsw
 # bDBWpFQwUjELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2Ex
 # KDAmBgNVBAMTH0dsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gRzICEhEhQFwf
-# DtJYiCvlTYaGuhHqRTANBgkqhkiG9w0BAQEFAASCAQCpqwdIz4XhPJP5M8GMTlcP
-# SNrBLUswiTIQKV5bDcmK2bRzcHe8pOiBQX22VTqWhcQUl6qQZ3NEGnwpfaDFmXZ8
-# EdM3GYmg4VD1Gr04tPiFTdaMfGxmmeYCFYcWvW2lumScVAiKnqjQ8S/lHNaPDwAl
-# 46sRwaj+xg3GRPWHyaQJwJj492hMUl8LHFiIxVYBMBYm6HFqg7cxO0J8d0gDU5Lx
-# i/SBMCT7R2I8vtTLzVk388Pt5bRtn/XdtDbugHv3sxIZnKA12LZAQcD8Obdl8uSs
-# Vpt5CDQ7JBi/IQYvfYGEKB6rMaaxFwCb3/TBUDSLfn3rBeFYq9pnkr0uQBlJ/57J
+# DtJYiCvlTYaGuhHqRTANBgkqhkiG9w0BAQEFAASCAQCp/IfFEAWua8aZBFocndtj
+# fGf8j8oyoJGzJCZI4o8IKHYQFw+ZhFXMT4V1AyDxRerk4Mmjx88zHZ05v6+iKqtX
+# YNng+VIPaNNs6SJSdytQwvh2uJ4EjIJZLGUful8ExA5rGOpV3uUcCB0MGpyKHwHQ
+# 477Ll8DR3dzB60fAodKl/CjUAB06du1LOoywV6DdtemNCTLMq4Icdt14QqNpILvV
+# 9ZFeldN8uvRAKkh4a4Pr0MpeyH1nl2aQ4SA0+thxRKPwKG2zMziQBOjnnqtTD3PC
+# 2EOqYGuArk9SedkDx9xL095YHe+dNYCRAfQmRHDkC08jXZEUb4I1ty6Om0P11Pqa
 # SIG # End signature block

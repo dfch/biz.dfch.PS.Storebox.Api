@@ -25,42 +25,7 @@ See PARAMETER section for a description of input parameters.
 
 
 
-.PARAMETER Session
-
-A hashtable containing a WebRequestSession and an UriPortal string.
-
-
-
-.PARAMETER Method
-
-The HTTP method of the REST call. Default is 'GET'. Possible values: 'GET', 'POST', 'DELETE'. 'PUT'.
-
-Alias: m
-
-
-.PARAMETER Api
-
-The command part of the REST call. Default is 'query'. For possible values see the vCD REST reference.
-
-Alias: a
-
-
-.PARAMETER QueryParameters
-
-The QueryString part of the REST call. For possible values see the vCD REST reference.
-
-Alias: q
-
-
-.PARAMETER Body
-
-Optional body of the REST call when using a POST or PUT operation/method. Default is '$null'. For possible values see the vCD REST reference.
-
-Alias: b
-
-
 .EXAMPLE
-
 [DFCHECK] Give proper example. Gets all possible 'query' operations of the CTERA REST query service.
 
 $xmlResponse = Invoke-RestCall;
@@ -89,164 +54,223 @@ Requires module 'biz.dfch.PS.System.Logging'.
 Requires a session to a CTERA host.
 
 #>
-	[CmdletBinding(
-		HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Invoke-RestCall'
-    )]
-	[OutputType([string])]
-  Param (
-		[Parameter(Mandatory = $false, Position = 2)]
-		[alias("s")]
-		$Session = $biz_dfch_PS_Storebox_Api.Session
-		,
-		[ValidateSet('GET', 'POST', 'PUT', 'DELETE', 'PROPFIND')]
-		[Parameter(Mandatory = $false, Position = 1)]
-		[alias("m")]
-		[string] $Method = 'GET'
-		, 
-		[Parameter(Mandatory = $false, Position = 0)]
-		[alias("a")]
-		[string] $Api = '/'
-		,
-		[Parameter(Mandatory = $false, Position = 3)]
-		[alias("q")]
-		[string] $QueryParameters = $null
-		, 
-		[Parameter(Mandatory = $false, Position = 4)]
-		[alias("b")]
-		[string] $Body = $null 
-	) # Param
-	BEGIN {
-		$datBegin = [datetime]::Now;
-		[string] $fn = $MyInvocation.MyCommand.Name;
-		Log-Debug -fn $fn -msg ("CALL. Method '{0}'; Api: '{1}'." -f $Method, $Api) -fac 1;
+[CmdletBinding(
+	HelpURI='http://dfch.biz/biz/dfch/PS/Storebox/Api/Invoke-RestCall'
+)]
+[OutputType([string])]
+Param 
+(
+	# A hashtable containing a WebRequestSession and an UriPortal string.
+	[Parameter(Mandatory = $false, Position = 2)]
+	[alias("s")]
+	$Session = $biz_dfch_PS_Storebox_Api.Session
+	,
+	# The HTTP method of the REST call. Default is 'GET'. 
+	# Possible values: 'GET', 'POST', 'DELETE'. 'PUT', 'PROPFIND'.
+	[ValidateSet('GET', 'POST', 'PUT', 'DELETE', 'PROPFIND')]
+	[Parameter(Mandatory = $false, Position = 1)]
+	[alias("m")]
+	[string] $Method = 'GET'
+	, 
+	# The command part of the REST call. Default is '/'.
+	[Parameter(Mandatory = $false, Position = 0)]
+	[alias("a")]
+	[string] $Api = '/'
+	,
+	# The QueryString part of the REST call.
+	[Parameter(Mandatory = $false, Position = 3)]
+	[alias("q")]
+	[string] $QueryParameters = $null
+	, 
+	# Optional body of the REST call when using a POST or PUT operation/method. 
+	# Default is '$null'.
+	[Parameter(Mandatory = $false, Position = 4)]
+	[alias("b")]
+	[string] $Body = $null 
+)
+BEGIN 
+{
+	$datBegin = [datetime]::Now;
+	[string] $fn = $MyInvocation.MyCommand.Name;
+	Log-Debug -fn $fn -msg ("CALL. Method '{0}'; Api: '{1}'." -f $Method, $Api) -fac 1;
+}
+PROCESS 
+{
+	[boolean] $fReturn = $false;
+	try 
+	{
+		# Parameter validation
+		if( $Session -isnot [System.Collections.Hashtable] ) 
+		{
+			Log-Error $fn ("Invalid input parameter type specified: Session. Aborting ...");
+			throw($gotoFailure);
+		}
+		if(!$Session.ContainsKey('WebSession')) 
+		{
+			Log-Error $fn ("Invalid input parameter type specified: Session [{0}] does not contain key 'WebSession'. Aborting ..." -f $Session.GetType().FullName);
+			throw($gotoFailure);
+		}
+		$WebRequestSession = $Session.WebSession;
+		if( $WebRequestSession -isnot [Microsoft.PowerShell.Commands.WebRequestSession] ) 
+		{
+			Log-Error $fn ("Invalid input parameter type specified: WebRequestSession [{0}]. Aborting ..." -f $WebRequestSession.GetType().FullName);
+			throw($gotoFailure);
+		}
+		if(!$Session.ContainsKey('UriPortal')) 
+		{
+			Log-Error $fn ("Invalid input parameter type specified: Session [{0}] does not contain key 'UriPortal'. Aborting ..." -f $Session.GetType().FullName);
+			throw($gotoFailure);
+		}
+		$UriPortal = $Session.UriPortal;
+		$UriAdmin = '{0}{1}' -f $UriPortal, $biz_dfch_PS_Storebox_Api.UriBase;
+		if([string]::IsNullOrEmpty($Api) -or [string]::IsNullOrWhiteSpace($Api)) 
+		{
+			Log-Error $fn "Invalid or empty input parameter specified: Api. Aborting ...";
+			throw($gotoFailure);
+		}
+		if([string]::Compare($Api, '/') -eq 0) 
+		{
+			$Api = '';
+		}
+		
+		# create WebClient
+		$wc = New-Object System.Net.WebClient;
+		$wc.Encoding = [System.Text.Encoding]::UTF8;
+		$wc.Headers.Clear();
+		
+		$Uri = ('{0}{1}?{2}' -f $UriAdmin, $Api, $QueryParameters).TrimEnd('?');
+		$wc.Headers.Add("Cookie", $WebRequestSession.Cookies.GetCookieHeader($uri))
+		$wc.Headers.Add('Content-Type', 'text/xml; charset=UTF-8');
+		$wc.Headers.Add('Accept', '*/*');
+		#$wc.Headers.Add('x-ctera-token', $WebRequestSession.Cookies.GetCookieHeader($uri));
+		$wc.Headers.Add('x-ctera-token', $biz_dfch_PS_Storebox_Api.SessionCookie.Value);
+		$wc.Headers.Add('User-Agent', $WebRequestSession.UserAgent);
+
+		# Excessive logging
+		# Log-Debug $fn ("Invoking '{0}' '{1}' ..." -f $Method, $Uri);
+		[string] $response = '';
+		if('GET'.Equals($Method.ToUpper()) ) 
+		{
+			$response = $wc.DownloadString($Uri);
+		} 
+		else 
+		{
+			$response = $wc.UploadString($Uri, $Method.ToUpper(), $Body);
+		}
+		if(!$response) 
+		{
+			Log-Error $fn ("Invoking '{0}' '{1}' FAILED. '{2}'" -f $Method, $Uri, $error[0]);
+			throw($gotoFailure);
+		}
+		# Excessive logging
+		# Log-Info $fn ("Invoking '{0}' '{1}' SUCCEEDED." -f $Method, $Uri);
+		try 
+		{
+			# try to convert the response to XML
+			# on failure we are probably not authenticated or something else went wrong
+			$xmlResult = [xml] $response;
+			$OutputParameter = $response;
+			$fReturn = $true;
+		}
+		catch 
+		{
+			$e = New-CustomErrorRecord -m ("Executing '{0}' '{1}' FAILED as response is no XML. Maybe authentication expired?" -f $Method, $Uri) -cat InvalidData -o $response;
+			throw($gotoError);
+		}
 	}
-	PROCESS {
-		[boolean] $fReturn = $false;
+	catch 
+	{
+		if($gotoSuccess -eq $_.Exception.Message) 
+		{
+			$fReturn = $true;
+		} 
+		else 
+		{
+			[string] $ErrorText = "catch [$($_.FullyQualifiedErrorId)]";
+			$ErrorText += (($_ | fl * -Force) | Out-String);
+			$ErrorText += (($_.Exception | fl * -Force) | Out-String);
+			$ErrorText += (Get-PSCallStack | Out-String);
+			
+			if($_.Exception.InnerException -is [System.Net.WebException]) 
+			{
+				Log-Critical $fn ("Operation '{0}' '{1}' FAILED [{2}]." -f $Method, $Uri, $_);
+				$HttpWebResponse = $_.Exception.InnerException.Response;
+				if($HttpWebResponse -is [System.Net.HttpWebResponse]) 
+				{
+					$sr = New-Object System.IO.StreamReader($HttpWebResponse.GetResponseStream(), $true);
+					$Content = $sr.ReadToEnd();
+					Log-Error $fn ("{0}`n{1}" -f $_.Exception.InnerException.Message, $Content) -v;
+				}
+				Log-Debug $fn $ErrorText -fac 3;
+			}
+			else 
+			{
+				Log-Error $fn $ErrorText -fac 3;
+				if($gotoError -eq $_.Exception.Message) 
+				{
+					Log-Error $fn $e.Exception.Message;
+					$PSCmdlet.ThrowTerminatingError($e);
+				} 
+				elseif($gotoFailure -ne $_.Exception.Message) 
+				{ 
+					Write-Verbose ("$fn`n$ErrorText"); 
+				} 
+				else 
+				{
+					# N/A
+				}
+			}
+			$fReturn = $false;
+			$OutputParameter = $null;
+		}
+	}
+	finally 
+	{
+		# Clean up
+		if($wc -is [System.Net.WebClient]) 
+		{ 
+			$wc.Dispose(); 
+		}
+	}
+	return $OutputParameter;
+}
 
-		try {
-			# Parameter validation
-			if( $Session -isnot [System.Collections.Hashtable] ) {
-				Log-Error $fn ("Invalid input parameter type specified: Session. Aborting ...");
-				throw($gotoFailure);
-			} # if
-			if(!$Session.ContainsKey('WebSession')) {
-				Log-Error $fn ("Invalid input parameter type specified: Session [{0}] does not contain key 'WebSession'. Aborting ..." -f $Session.GetType().FullName);
-				throw($gotoFailure);
-			} #if
-			$WebRequestSession = $Session.WebSession;
-			if( $WebRequestSession -isnot [Microsoft.PowerShell.Commands.WebRequestSession] ) {
-				Log-Error $fn ("Invalid input parameter type specified: WebRequestSession [{0}]. Aborting ..." -f $WebRequestSession.GetType().FullName);
-				throw($gotoFailure);
-			} # if
-			if(!$Session.ContainsKey('UriPortal')) {
-				Log-Error $fn ("Invalid input parameter type specified: Session [{0}] does not contain key 'UriPortal'. Aborting ..." -f $Session.GetType().FullName);
-				throw($gotoFailure);
-			} #if
-			$UriPortal = $Session.UriPortal;
-			$UriAdmin = '{0}{1}' -f $UriPortal, $biz_dfch_PS_Storebox_Api.UriBase;
-			if([string]::IsNullOrEmpty($Api) -or [string]::IsNullOrWhiteSpace($Api)) {
-				Log-Error $fn "Invalid or empty input parameter specified: Api. Aborting ...";
-				throw($gotoFailure);
-			} # if
-			if([string]::Compare($Api, '/') -eq 0) {
-				$Api = '';
-			} # if
-			
-			# create WebClient
-			$wc = New-Object System.Net.WebClient;
-			$wc.Encoding = [System.Text.Encoding]::UTF8;
-			$wc.Headers.Clear();
-			
-			$Uri = ('{0}{1}?{2}' -f $UriAdmin, $Api, $QueryParameters).TrimEnd('?');
-			$wc.Headers.Add("Cookie", $WebRequestSession.Cookies.GetCookieHeader($uri))
-			$wc.Headers.Add('Content-Type', 'text/xml; charset=UTF-8');
-			$wc.Headers.Add('Accept', '*/*');
-			#$wc.Headers.Add('x-ctera-token', $WebRequestSession.Cookies.GetCookieHeader($uri));
-			$wc.Headers.Add('x-ctera-token', $biz_dfch_PS_Storebox_Api.SessionCookie.Value);
-			$wc.Headers.Add('User-Agent', $WebRequestSession.UserAgent);
-
-			# Excessive logging
-			# Log-Debug $fn ("Invoking '{0}' '{1}' ..." -f $Method, $Uri);
-			[string] $response = '';
-			if('GET'.Equals($Method.ToUpper()) ) {
-				$response = $wc.DownloadString($Uri);
-			} else {
-				$response = $wc.UploadString($Uri, $Method.ToUpper(), $Body);
-			} # if
-			#$(Format-ExtendedMethod -name add -p $RequestBody));
-			if(!$response) {
-				Log-Error $fn ("Invoking '{0}' '{1}' FAILED. '{2}'" -f $Method, $Uri, $error[0]);
-				throw($gotoFailure);
-			} # if
-			# Excessive logging
-			# Log-Debug $fn ("Invoking '{0}' '{1}' SUCCEEDED." -f $Method, $Uri);
-			try {
-				# try to convert the response to XML
-				# on failure we are probably not authenticated or something else went wrong
-				$xmlResult = [xml] $response;
-				$OutputParameter = $response;
-				$fReturn = $true;
-			} # try
-			catch {
-				$e = New-CustomErrorRecord -m ("Executing '{0}' '{1}' FAILED as response is no XML. Maybe authentication expired?" -f $Method, $Uri) -cat InvalidData -o $response;
-				throw($gotoError);
-			} # catch
-			
-		} # try
-		catch {
-			if($gotoSuccess -eq $_.Exception.Message) {
-					$fReturn = $true;
-			} else {
-				[string] $ErrorText = "catch [$($_.FullyQualifiedErrorId)]";
-				$ErrorText += (($_ | fl * -Force) | Out-String);
-				$ErrorText += (($_.Exception | fl * -Force) | Out-String);
-				$ErrorText += (Get-PSCallStack | Out-String);
-				
-				if($_.Exception.InnerException -is [System.Net.WebException]) {
-					Log-Critical $fn ("Operation '{0}' '{1}' FAILED [{2}]." -f $Method, $Uri, $_);
-					$HttpWebResponse = $_.Exception.InnerException.Response;
-					if($HttpWebResponse -is [System.Net.HttpWebResponse]) {
-						$sr = New-Object System.IO.StreamReader($HttpWebResponse.GetResponseStream(), $true);
-						$Content = $sr.ReadToEnd();
-						Log-Error $fn ("{0}`n{1}" -f $_.Exception.InnerException.Message, $Content) -v;
-					} # if
-					Log-Debug $fn $ErrorText -fac 3;
-				} # [System.Net.WebException]
-				else {
-					Log-Error $fn $ErrorText -fac 3;
-					if($gotoError -eq $_.Exception.Message) {
-						Log-Error $fn $e.Exception.Message;
-						$PSCmdlet.ThrowTerminatingError($e);
-					} elseif($gotoFailure -ne $_.Exception.Message) { 
-						Write-Verbose ("$fn`n$ErrorText"); 
-					} else {
-						# N/A
-					} # if
-				} # other exceptions
-				$fReturn = $false;
-				$OutputParameter = $null;
-			} # !$gotoSuccess
-		} # catch
-		finally {
-			# Clean up
-			if($wc -is [System.Net.WebClient]) { $wc.Dispose(); }
-		} # finally
-		return $OutputParameter;
-  } # PROCESS
-	END {
-		$datEnd = [datetime]::Now;
+END 
+{
+	$datEnd = [datetime]::Now;
+	if(1000 -le ($datEnd - $datBegin).TotalMilliseconds)
+	{
 		Log-Debug -fn $fn -msg ("RET. fReturn: [{0}]. Execution time: [{1}]ms. Started: [{2}]." -f $fReturn, ($datEnd - $datBegin).TotalMilliseconds, $datBegin.ToString('yyyy-MM-dd HH:mm:ss.fffzzz')) -fac 2;
-	} # END
+	}
+}
 } # function
 Set-Alias -Name Invoke-Command -Value Invoke-RestCall;
 Export-ModuleMember -Function Invoke-RestCall -Alias Invoke-Command;
 
+<##
+ #
+ #
+ # Copyright 2014, 2015 Ronald Rink, d-fens GmbH
+ #
+ # Licensed under the Apache License, Version 2.0 (the "License");
+ # you may not use this file except in compliance with the License.
+ # You may obtain a copy of the License at
+ #
+ # http://www.apache.org/licenses/LICENSE-2.0
+ #
+ # Unless required by applicable law or agreed to in writing, software
+ # distributed under the License is distributed on an "AS IS" BASIS,
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ #
+ #>
 
 # SIG # Begin signature block
 # MIIW3AYJKoZIhvcNAQcCoIIWzTCCFskCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUjlZ8s3Ovj8jtFWLxLbMRXFnZ
-# 2uagghGYMIIEFDCCAvygAwIBAgILBAAAAAABL07hUtcwDQYJKoZIhvcNAQEFBQAw
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUFBfi2FJzRVPRMeBlDaDGEyEn
+# BZagghGYMIIEFDCCAvygAwIBAgILBAAAAAABL07hUtcwDQYJKoZIhvcNAQEFBQAw
 # VzELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNV
 # BAsTB1Jvb3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw0xMTA0
 # MTMxMDAwMDBaFw0yODAxMjgxMjAwMDBaMFIxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
@@ -290,12 +314,12 @@ Export-ModuleMember -Function Invoke-RestCall -Alias Invoke-Command;
 # cME9fte9LyrD4vWPDJDca6XIvmheXW34eNK+SZUeFXgIkfs0yL6Erbzgxt0Y2/PK
 # 8HvCFDwYuAO6lT4hHj9gaXp/agOejUr58CgsMIRe7CZyQrFty2TDEozWhEtnQXyx
 # Axd4CeOtqLaWLaR+gANPiPfBa1pGFc0sGYvYcJzlLUmIYHKopBlScENe2tZGA7Bo
-# DiTvSvYLJSTvJDCCBJ8wggOHoAMCAQICEhEhQFwfDtJYiCvlTYaGuhHqRTANBgkq
+# DiTvSvYLJSTvJDCCBJ8wggOHoAMCAQICEhEhBqCB0z/YeuWCTMFrUglOAzANBgkq
 # hkiG9w0BAQUFADBSMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBu
 # di1zYTEoMCYGA1UEAxMfR2xvYmFsU2lnbiBUaW1lc3RhbXBpbmcgQ0EgLSBHMjAe
-# Fw0xMzA4MjMwMDAwMDBaFw0yNDA5MjMwMDAwMDBaMGAxCzAJBgNVBAYTAlNHMR8w
+# Fw0xNTAyMDMwMDAwMDBaFw0yNjAzMDMwMDAwMDBaMGAxCzAJBgNVBAYTAlNHMR8w
 # HQYDVQQKExZHTU8gR2xvYmFsU2lnbiBQdGUgTHRkMTAwLgYDVQQDEydHbG9iYWxT
-# aWduIFRTQSBmb3IgTVMgQXV0aGVudGljb2RlIC0gRzEwggEiMA0GCSqGSIb3DQEB
+# aWduIFRTQSBmb3IgTVMgQXV0aGVudGljb2RlIC0gRzIwggEiMA0GCSqGSIb3DQEB
 # AQUAA4IBDwAwggEKAoIBAQCwF66i07YEMFYeWA+x7VWk1lTL2PZzOuxdXqsl/Tal
 # +oTDYUDFRrVZUjtCoi5fE2IQqVvmc9aSJbF9I+MGs4c6DkPw1wCJU6IRMVIobl1A
 # cjzyCXenSZKX1GyQoHan/bjcs53yB2AsT1iYAGvTFVTg+t3/gCxfGKaY/9Sr7KFF
@@ -309,12 +333,12 @@ Export-ModuleMember -Function Invoke-RestCall -Alias Invoke-Command;
 # Y3JsMFQGCCsGAQUFBwEBBEgwRjBEBggrBgEFBQcwAoY4aHR0cDovL3NlY3VyZS5n
 # bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3N0aW1lc3RhbXBpbmdnMi5jcnQwHQYDVR0O
 # BBYEFNSihEo4Whh/uk8wUL2d1XqH1gn3MB8GA1UdIwQYMBaAFEbYPv/c477/g+b0
-# hZuw3WrWFKnBMA0GCSqGSIb3DQEBBQUAA4IBAQACMRQuWFdkQYXorxJ1PIgcw17s
-# LOmhPPW6qlMdudEpY9xDZ4bUOdrexsn/vkWF9KTXwVHqGO5AWF7me8yiQSkTOMjq
-# IRaczpCmLvumytmU30Ad+QIYK772XU+f/5pI28UFCcqAzqD53EvDI+YDj7S0r1tx
-# KWGRGBprevL9DdHNfV6Y67pwXuX06kPeNT3FFIGK2z4QXrty+qGgk6sDHMFlPJET
-# iwRdK8S5FhvMVcUM6KvnQ8mygyilUxNHqzlkuRzqNDCxdgCVIfHUPaj9oAAy126Y
-# PKacOwuDvsu4uyomjFm4ua6vJqziNKLcIQ2BCzgT90Wj49vErKFtG7flYVzXMIIE
+# hZuw3WrWFKnBMA0GCSqGSIb3DQEBBQUAA4IBAQCAMtwHjRygnJ08Kug9IYtZoU1+
+# zETOA75+qrzE5ntzu0vxiNqQTnU3KDhjudcrD1SpVs53OZcwc82b2dkFRRyNpLgD
+# XU/ZHC6Y4OmI5uzXBX5WKnv3FlujrY+XJRKEG7JcY0oK0u8QVEeChDVpKJwM5B8U
+# FiT6ddx0cm5OyuNqQ6/PfTZI0b3pBpEsL6bIcf3PvdidIZj8r9veIoyvp/N3753c
+# o3BLRBrweIUe8qWMObXciBw37a0U9QcLJr2+bQJesbiwWGyFOg32/1onDMXeU+dU
+# PFZMyU5MMPbyXPsajMKCvq1ZkfYbTVV7z1sB3P16028jXDJHmwHzwVEURoqbMIIE
 # rTCCA5WgAwIBAgISESFgd9/aXcgt4FtCBtsrp6UyMA0GCSqGSIb3DQEBBQUAMFEx
 # CzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMScwJQYDVQQD
 # Ex5HbG9iYWxTaWduIENvZGVTaWduaW5nIENBIC0gRzIwHhcNMTIwNjA4MDcyNDEx
@@ -344,25 +368,25 @@ Export-ModuleMember -Function Invoke-RestCall -Alias Invoke-Command;
 # bnYtc2ExJzAlBgNVBAMTHkdsb2JhbFNpZ24gQ29kZVNpZ25pbmcgQ0EgLSBHMgIS
 # ESFgd9/aXcgt4FtCBtsrp6UyMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEMMQow
 # CKACgAChAoAAMBkGCSqGSIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcC
-# AQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBRbhjUWjg57cdHiERTO
-# rZcE3SCPkzANBgkqhkiG9w0BAQEFAASCAQC5nrhy30P7U9cWn29Ruakh3I24+Xsk
-# TQ7zsn1O1wtYlI9e/KJg3yL/0b7Tcbr6QOSUiby4l8sgvFeQEizznRpuJqRc4Cx7
-# cf26HeYJzG9jiFYrphZUtQ1wWA4cwFdBTPv9c4hnmq0l8lEpdW0MyYQR3X/ulXpZ
-# htwxM8+PExgrSC1RTnlklfAg6e1kjAB26UrcRY9jGLsAs38Yn+jRLNySHJLq7WgT
-# C047+TIhOBJ7MmzjtdRW9GDU+Pd3xbGfPZxvy03hICgzmtYWMgq5gsG4vtR2EUF2
-# de6I4ShjbFXqTqCvmkNl3ZrCvzLTOY65rWBgeUuCbIeEkvTTTjsMKBqBoYICojCC
+# AQsxDjAMBgorBgEEAYI3AgEVMCMGCSqGSIb3DQEJBDEWBBQO0piSMwqp4rx4obbL
+# OcpG6kJjaTANBgkqhkiG9w0BAQEFAASCAQACK9HI1+iN1bd4KN9zW1LHcIETfLq8
+# 2AZ3vRwo0A5s8qVRhUN3ZDAWNGb8rmX0j9Ob0dV3fas8pdNkbSJDobLTvsFs32lY
+# 9CG8ljCIWHfoj3c8vGBL15Jx9PSVKzSM9Wtdhc1xuTBYAfOcRmtz24TTRgD1D8u7
+# XnNfYDuVf0axmcO1y1cQDerU5ZZJVf/FjL6kQwx8wAjPwzqu3fGLvtjMZjeSDLsZ
+# D7h4cTXTizyrCgEPpGoAASlmhHRC8BxGdSAPoCi+9yR2R1RV4o7AlMn6FOBFGBu+
+# imv57VdjZGiX/PmLD0yuH3o2sqAkBoO8a7lHvdv8Elvo0zdGcSBbvALioYICojCC
 # Ap4GCSqGSIb3DQEJBjGCAo8wggKLAgEBMGgwUjELMAkGA1UEBhMCQkUxGTAXBgNV
 # BAoTEEdsb2JhbFNpZ24gbnYtc2ExKDAmBgNVBAMTH0dsb2JhbFNpZ24gVGltZXN0
-# YW1waW5nIENBIC0gRzICEhEhQFwfDtJYiCvlTYaGuhHqRTAJBgUrDgMCGgUAoIH9
-# MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE1MDIy
-# ODExMjEzOFowIwYJKoZIhvcNAQkEMRYEFAzhAP0UK1EE4OYyZiCGQunCirXJMIGd
-# BgsqhkiG9w0BCRACDDGBjTCBijCBhzCBhAQUjOafUBLh0aj7OV4uMeK0K947NDsw
+# YW1waW5nIENBIC0gRzICEhEhBqCB0z/YeuWCTMFrUglOAzAJBgUrDgMCGgUAoIH9
+# MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE1MDQx
+# NjE1MDA1NlowIwYJKoZIhvcNAQkEMRYEFNfNPu+UrOwg/ZPnPVhA4UbTmizZMIGd
+# BgsqhkiG9w0BCRACDDGBjTCBijCBhzCBhAQUs2MItNTN7U/PvWa5Vfrjv7EsKeYw
 # bDBWpFQwUjELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2Ex
-# KDAmBgNVBAMTH0dsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gRzICEhEhQFwf
-# DtJYiCvlTYaGuhHqRTANBgkqhkiG9w0BAQEFAASCAQCp/IfFEAWua8aZBFocndtj
-# fGf8j8oyoJGzJCZI4o8IKHYQFw+ZhFXMT4V1AyDxRerk4Mmjx88zHZ05v6+iKqtX
-# YNng+VIPaNNs6SJSdytQwvh2uJ4EjIJZLGUful8ExA5rGOpV3uUcCB0MGpyKHwHQ
-# 477Ll8DR3dzB60fAodKl/CjUAB06du1LOoywV6DdtemNCTLMq4Icdt14QqNpILvV
-# 9ZFeldN8uvRAKkh4a4Pr0MpeyH1nl2aQ4SA0+thxRKPwKG2zMziQBOjnnqtTD3PC
-# 2EOqYGuArk9SedkDx9xL095YHe+dNYCRAfQmRHDkC08jXZEUb4I1ty6Om0P11Pqa
+# KDAmBgNVBAMTH0dsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gRzICEhEhBqCB
+# 0z/YeuWCTMFrUglOAzANBgkqhkiG9w0BAQEFAASCAQCCzhbF6ipA00+IJV/aJqUo
+# iKceC4LsNaWkAQopeir8oRIyPDmCaZsO4MIq7Jd0ZIz9gIMIKnp4DDQk8cvVwH37
+# eE+T7x0mZHeHquSGtz5FEeO/AHEqtXY0S9u9IXCaA1lRKLszmplOHwnTiVmqHUBR
+# I6UwFJ9osgHHAdrDGVbv4ELxtiLLkYio9zobP3VlOFeQ8Rx/fDmabiDISNmTm7zB
+# /katgBR25H3oD3kTxUU5wftmM9f+FADRfXA9JcrYQUVa4FLGF/Qthz97lF0jTFF0
+# N3pTkDtihR+bazrJcNi2eknrQy9uNt0ven88qrsOA0TzYjG3nrygTlJio/9CeGnA
 # SIG # End signature block

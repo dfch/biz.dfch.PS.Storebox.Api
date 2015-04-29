@@ -76,9 +76,9 @@ END {
 	Log-Debug -fn $fn -msg ("RET. fReturn: [{0}]. Execution time: [{1}]ms. Started: [{2}]." -f $fReturn, ($datEnd - $datBegin).TotalMilliseconds, $datBegin.ToString('yyyy-MM-dd HH:mm:ss.fffzzz')) -fac 2;
 } # END
 } # function
-Export-ModuleMember -Function Remove-Plan;
+if($MyInvocation.ScriptName) { Export-ModuleMember -Function Remove-Plan; } 
 
-<##
+##
  #
  #
  # Copyright 2013-2015 Ronald Rink, d-fens GmbH
@@ -95,7 +95,7 @@ Export-ModuleMember -Function Remove-Plan;
  # See the License for the specific language governing permissions and
  # limitations under the License.
  #
- #>
+ #
 
 
 # SIG # Begin signature block

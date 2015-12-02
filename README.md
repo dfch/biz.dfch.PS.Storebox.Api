@@ -1,7 +1,7 @@
 biz.dfch.PS.Storebox.Api
 ========================
 
-[![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/dfensgmbh/biz.dfch.PS.Storebox.Api/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/dfch/biz.dfch.PS.Storebox.Api/blob/master/LICENSE)
 ![NuGet downloads](https://img.shields.io/nuget/dt/biz.dfch.PS.Storebox.Api.svg)
 ![Version](https://img.shields.io/nuget/v/biz.dfch.PS.Storebox.Api.svg)
 

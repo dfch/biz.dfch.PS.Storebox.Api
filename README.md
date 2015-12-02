@@ -1,6 +1,10 @@
 biz.dfch.PS.Storebox.Api
 ========================
 
+[![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://github.com/dfensgmbh/biz.dfch.PS.Storebox.Api/blob/master/LICENSE)
+![NuGet downloads](https://img.shields.io/nuget/dt/biz.dfch.PS.Storebox.Api.svg)
+![Version](https://img.shields.io/nuget/v/biz.dfch.PS.Storebox.Api.svg)
+
 d-fens GmbH, General-Guisan-Strasse 6, CH-6300 Zug, Switzerland
 
 This Microsoft PowerShell module contains Cmdlets to perform various actions against CTERA REST APIs which is also used in the product "[Swisscom Storebox](http://www.swisscom.ch/storebox)".
